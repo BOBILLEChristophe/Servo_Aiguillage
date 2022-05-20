@@ -65,7 +65,7 @@ void Aiguille::loop()
   this->railValAig = digitalRead(railPinAig); // read the input railPinAig
   if (millis() - lastMoveTime > tempo)
   {
-    Aiguille::attach(servoPin);
+    this->attach(servoPin);
     if (togValAig == LOW)
     {                                // check status toggle switche Turnout//
       digitalWrite(relPinAig, HIGH); // turn relay turnout on //
