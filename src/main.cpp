@@ -66,8 +66,10 @@ void Aiguille::test()
   for (byte i = 0; i < 3; i++)
   {
     this->writeMicroseconds(minPosition);
+    Serial.println("goto min");
     delay(1000);
     this->writeMicroseconds(maxPosition);
+    Serial.println("goto max");
     delay(1000);
   }
   this->detach();
