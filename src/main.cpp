@@ -24,6 +24,7 @@ public:
   Aiguille(); // Constructor
   void setup(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint16_t, uint16_t, uint8_t);
   void loop();
+  void test();
 };
 
 // Constructor
@@ -58,6 +59,20 @@ void Aiguille::setup(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint
   pinMode(togPinAig, INPUT);
   pinMode(railPinAig, INPUT);
 }
+
+void Aiguille::test()
+{
+  this->attach(servoPin);
+  for (byte i = 0; i < 3; i++)
+  {
+    this->writeMicroseconds(minPosition);
+    delay(1000);
+    this->writeMicroseconds(maxPosition);
+    delay(1000);
+  }
+  this->detach();
+}
+
 
 void Aiguille::loop()
 {
@@ -116,6 +131,9 @@ void setup()
   // id, servoPin, railPinAig, togPinAig, ledPinAig, relPinAig, minPosition, maxPosition, (dirAig)
   aiguille[0].setup(5, 6, 30, 39, 48, 65, 750, 2200, 0);
   aiguille[1].setup(6, 7, 32, 41, 50, 66, 30, 150, 0);
+  
+   for (auto el : aiguille)
+    el.test();
 }
 
 void loop()
