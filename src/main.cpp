@@ -114,7 +114,7 @@ void setup()
 
   // Setup de chaque instance
   // id, servoPin, railPinAig, togPinAig, ledPinAig, relPinAig, minPosition, maxPosition, (dirAig)
-  aiguille[0].setup(5, 6, 30, 39, 48, 65, 750, 1500, 0);
+  aiguille[0].setup(5, 6, 30, 39, 48, 65, 750, 2200, 0);
   aiguille[1].setup(6, 7, 32, 41, 50, 66, 30, 150, 0);
 }
 
