@@ -28,11 +28,12 @@ void Aiguille::setup(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint
   minPosition = g;
   maxPosition = h;
   dirAig = i;
-  // lastMoveTime = 0;
+  
   pinMode(ledPinAig, OUTPUT);
   pinMode(relPinAig, OUTPUT);
   pinMode(togPinAig, INPUT_PULLUP);
-  pinMode(railPinAig, INPUT);
+  if(railPinAig < NOPIN)
+    pinMode(railPinAig, INPUT);
 }
 
 void Aiguille::test()
