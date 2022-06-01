@@ -9,6 +9,8 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+#define NOPIN 255
+
 class Aiguille : public Servo
 {
 
@@ -25,8 +27,8 @@ private:
   uint8_t  dirAig;
   uint8_t  togValAig;
   uint8_t  railValAig; // fin de course
-  unsigned long lastMoveTime;
-  const unsigned long tempo;
+  uint64_t lastMoveTime;
+  uint16_t tempo;
 
 public:
   Aiguille(); // Constructor
