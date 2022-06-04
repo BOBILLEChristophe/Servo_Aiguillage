@@ -7,6 +7,7 @@
 #define __AIGUILLE_H__
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <Servo.h>
 
 #define NOPIN 255
@@ -35,6 +36,10 @@ public:
   void setup(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint16_t, uint16_t, uint8_t);
   void loop();
   void test();
+  void reglageServo(uint8_t);
+  void saveMinPos();
+  void saveMaxPos();
+  void writePosServo();
 };
 
 #endif
