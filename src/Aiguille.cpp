@@ -28,11 +28,11 @@ void Aiguille::setup(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint
   minPosition = g;
   maxPosition = h;
   dirAig = i;
-  
+
   pinMode(ledPinAig, OUTPUT);
   pinMode(relPinAig, OUTPUT);
-  pinMode(togPinAig, INPUT_PULLUP);
-  if(railPinAig < NOPIN)
+  pinMode(togPinAig, INPUT);
+  if (railPinAig != NOPIN)
     pinMode(railPinAig, INPUT);
 }
 
@@ -42,9 +42,45 @@ void Aiguille::test()
   this->writeMicroseconds(minPosition);
   delay(500);
   this->writeMicroseconds(maxPosition);
-  delay(100);
-  posAig = maxPosition;
+  delay(500);
+  this->posAig = maxPosition;
   this->detach();
+}
+
+void Aiguille::reglageServo(uint8_t x)
+{
+  this->attach(servoPin);
+  if (x == '-')
+    this->posAig--;
+  else if (x == '+')
+    this->posAig++;
+  delay(10);
+  this->writeMicroseconds(posAig);
+  delay(10);
+  this->detach();
+  Serial.println(posAig);
+}
+
+void Aiguille::saveMinPos()
+{
+  this->minPosition = posAig;
+  EEPROM.put((id * 2) * sizeof(uint16_t), posAig);
+}
+
+void Aiguille::saveMaxPos()
+{
+  this->maxPosition = posAig;
+  EEPROM.put(((id * 2) + 1) * sizeof(uint16_t), posAig);
+}
+
+void Aiguille::writePosServo()
+{
+  Serial.print("\t");
+  Serial.print(this->id);
+  Serial.print("\t");
+  Serial.print(this->minPosition);
+  Serial.print("\t");
+  Serial.println(this->maxPosition);
 }
 
 void Aiguille::loop()
@@ -62,36 +98,36 @@ void Aiguille::loop()
     this->lastMoveTime = millis();
     if (togValAig == LOW)
     {                                // check status toggle switche Turnout
-      digitalWrite(relPinAig, HIGH); // turn relay turnout on 
+      digitalWrite(relPinAig, HIGH); // turn relay turnout on
       if (dirAig == 0)
       { //  check status of dir variable turnout
         if (posAig > minPosition)
-        // if (railValAig == LOW && posAig > minPosition)
+          // if (railValAig == LOW && posAig > minPosition)
           posAig--;
         else
-          dirAig = 1; //  set status of dir variable turnout to 1 
+          dirAig = 1; //  set status of dir variable turnout to 1
       }
       else if (dirAig == 1)
       {
-        digitalWrite(ledPinAig, HIGH); // turn LED turnout "straight" on 
-        digitalWrite(relPinAig, LOW);  // turn  relay turnout off  
+        digitalWrite(ledPinAig, HIGH); // turn LED turnout "straight" on
+        digitalWrite(relPinAig, LOW);  // turn  relay turnout off
       }
     }
     else if (togValAig == HIGH)
     {                                // check status of toggle switche turnout
-      digitalWrite(relPinAig, HIGH); // turn relay turnout on 
+      digitalWrite(relPinAig, HIGH); // turn relay turnout on
       if (dirAig == 1)
       {                           //  check status of dir variable turnout
         if (posAig < maxPosition) //  check status of rail feedback turnout
-        // if (railValAig == LOW && posAig < maxPosition)
+          // if (railValAig == LOW && posAig < maxPosition)
           posAig++;
-        else 
+        else
           dirAig = 0; //  set status of dir variable turnout to 0
       }
       else if (dirAig == 0)
       {
-        digitalWrite(ledPinAig, LOW); // turn LED turnout "divert" on 
-        digitalWrite(relPinAig, LOW); // turn relay turnout off  
+        digitalWrite(ledPinAig, LOW); // turn LED turnout "divert" on
+        digitalWrite(relPinAig, LOW); // turn relay turnout off
       }
     }
     this->writeMicroseconds(posAig); // move servo turnout
