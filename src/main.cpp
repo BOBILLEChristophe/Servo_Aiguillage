@@ -16,8 +16,8 @@ uint8_t eepromAddress[NB_SERVO];
 
 void setup()
 {
-  // Serial.begin(9600); // start the serial port
-  Serial.begin(115200); // start the serial port
+  Serial.begin(9600); // start the serial port
+  // Serial.begin(115200); // start the serial port
 
   for (byte i = 0; i < NB_SERVO * 2; i++)
   {
@@ -29,28 +29,16 @@ void setup()
       position[i] = val;
   }
 
-  // Temporaire
-  position[0] = 750;
-  position[1] = 2200;
-  position[2] = 1250;
-  position[3] = 1750;
-  position[4] = 1400;
-  position[5] = 1800;
-  position[6] = 1250;
-  position[7] = 1750;
-  position[8] = 1000;
-  position[9] = 2000;
-  position[10] = 1300;
-  position[11] = 2200;
+ 
 
   // Setup de chaque instance
-  // id, servoPin, railPinAig, togPinAig, ledPinAig, relPinAig, minPosition, maxPosition, (dirAig)
-  aiguille[0].setup(0, 2, 49, 31, 40, 65, position[0], position[1], 0);
-  aiguille[1].setup(1, 3, 51, 33, 42, 66, position[2], position[3], 0);
-  aiguille[2].setup(2, 4, 53, 35, 44, 65, position[4], position[5], 0);
-  aiguille[3].setup(3, 5, NOPIN, 37, 46, 66, position[6], position[7], 0);
-  aiguille[4].setup(4, 6, NOPIN, 39, 48, 65, position[8], position[9], 1);
-  aiguille[5].setup(5, 11, NOPIN, 41, 50, 66, position[10], position[11], 0);
+  // id, servoPin, togPinAig, ledPinAig, minPosition, maxPosition, (dirAig)
+  aiguille[0].setup(0, 2, 31, 40, position[0], position[1], 0);
+  aiguille[1].setup(1, 3, 33, 42, position[2], position[3], 0);
+  aiguille[2].setup(2, 4, 35, 44, position[4], position[5], 0);
+  aiguille[3].setup(3, 5, 37, 46, position[6], position[7], 0);
+  aiguille[4].setup(4, 6, 39, 48, position[8], position[9], 1);
+  aiguille[5].setup(5, 11, 41, 50, position[10], position[11], 0);
 
   for (byte i = 0; i < NB_SERVO; i++)
     aiguille[i].test();
@@ -80,28 +68,40 @@ void reglageServo()
     {
       switch (incomingByte)
       {
-      case '-':
-        Serial.print("position mini : ");
-        aiguille[numAig].reglageServo('-');
-        etapeNum = 0;
-        break;
-      case '+':
-        Serial.print("position max : ");
-        aiguille[numAig].reglageServo('+');
-        etapeNum = 1;
-        break;
-      case 's':
-        switch (etapeNum)
-        {
-        case 0:
-          aiguille[numAig].saveMinPos();
+        case 13:
           break;
-        case 1:
-          aiguille[numAig].saveMaxPos();
+        case '-':
+          if (etapeNum == 0)
+            Serial.print("minPosition : ");
+          else if (etapeNum == 1)
+            Serial.print("maxPosition : ");
+
+          Serial.print("Nouvelle position - : ");
+          aiguille[numAig].reglageServo('-');
+          etapeNum = 0;
           break;
-        }
-        etapeNum++;
-        break;
+        case '+':
+          if (etapeNum == 0)
+            Serial.print("minPosition : ");
+          else if (etapeNum == 1)
+            Serial.print("maxPosition : ");
+
+          Serial.print("Nouvelle position + : ");
+          aiguille[numAig].reglageServo('+');
+          etapeNum = 1;
+          break;
+        case 's':
+          switch (etapeNum)
+          {
+            case 0:
+              aiguille[numAig].saveMinPos();
+              break;
+            case 1:
+              aiguille[numAig].saveMaxPos();
+              break;
+          }
+          etapeNum++;
+          break;
         case 'w':
           Serial.print("Aiguille ");
           Serial.print("\t");
@@ -117,5 +117,3 @@ void reglageServo()
     }
   }
 }
-
-
