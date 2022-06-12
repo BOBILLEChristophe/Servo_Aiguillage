@@ -77,7 +77,7 @@ void reglageServo()
             Serial.print("maxPosition : ");
 
           Serial.print("Nouvelle position - : ");
-          aiguille[numAig].reglageServo('-');
+          aiguille[numAig].reglageServo('-', etapeNum);
           etapeNum = 0;
           break;
         case '+':
@@ -87,7 +87,7 @@ void reglageServo()
             Serial.print("maxPosition : ");
 
           Serial.print("Nouvelle position + : ");
-          aiguille[numAig].reglageServo('+');
+          aiguille[numAig].reglageServo('+', etapeNum);
           etapeNum = 1;
           break;
         case 's':
