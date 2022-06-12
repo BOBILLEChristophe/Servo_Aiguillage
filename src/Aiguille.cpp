@@ -12,7 +12,8 @@ Aiguille::Aiguille() : id(0),
                        dirAig(0),
                        lastMoveTime(0),
                        tempo(5)
-{}
+{
+}
 
 void Aiguille::setup(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint16_t e, uint16_t f, uint8_t g = 0)
 {
@@ -39,8 +40,13 @@ void Aiguille::test()
   this->detach();
 }
 
-void Aiguille::reglageServo(uint8_t x)
+void Aiguille::reglageServo(uint8_t x, uint8_t y)
 {
+  if (y == 0)
+    this->posAig = this->minPosition;
+  else
+    this->posAig = this->maxPosition;
+
   this->attach(servoPin);
   if (x == '-')
     this->posAig--;
@@ -51,6 +57,11 @@ void Aiguille::reglageServo(uint8_t x)
   delay(10);
   this->detach();
   Serial.println(posAig);
+
+  if (y == 0)
+    this->minPosition = this->posAig;
+  else
+    this->maxPosition = this->posAig;
 }
 
 void Aiguille::saveMinPos()
